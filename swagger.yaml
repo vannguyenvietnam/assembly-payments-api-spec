@@ -1093,6 +1093,364 @@ paths:
                       links:
                         self: '/callbacks?description=testy&url=https://httpbin.org&object_type=batch_transactions&enabled=true'
                         responses: /callbacks/30403493-7249-433a-83ce-555388f75c01/responses
+  '/webhooks/{id}':
+    get:
+      tags:
+        - Webhooks
+      summary: Show Webhook
+      description: 'Show details of a specific **Webhook** using a given `:id`.'
+      operationId: showWebhook
+      parameters:
+        - name: id
+          in: path
+          description: Webhook ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+          example: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/single_webhook'
+              examples:
+                response:
+                  value:
+                    webhooks:
+                      id: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+                      description": Users Webhook
+                      url: 'https://httpbin.org/post'
+                      object_type: users
+                      enabled: true
+                      authorization_token: null
+                      created_at: '2019-03-29T06:12:57.686Z'
+                      updated_at: '2019-03-29T06:12:57.686Z'
+                      marketplace_id: 8a840e7b-20e2-4a05-86b9-60b62bc6c21c
+                      links:
+                        self: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970
+                        responses: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/responses
+    delete:
+      tags:
+        - Webhooks
+      summary: Delete Webhook
+      description: 'Delete an existing Webhook using a given `:id`.'
+      operationId: deleteWebhook
+      parameters:
+        - name: id
+          in: path
+          description: Webhook ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+          example: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/webhook_deletion'
+              examples:
+                response:
+                  value:
+                    callbacks: Successfully redacted
+    patch:
+      tags:
+        - Webhooks
+      summary: Update Webhook
+      description: |
+        Update an existing **Webhook** using a given `:id`. You can change the `URL`, the `object_type` and whether the **Webhook** is `enabled` or `disabled`.
+      operationId: updateWebhook
+      parameters:
+        - name: id
+          in: path
+          description: Webhook ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+          example: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/webhook_requestBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/single_webhook'
+              examples:
+                response:
+                  value:
+                    webhooks:
+                      id: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+                      description": Users Webhook
+                      url: 'https://httpbin.org/post'
+                      object_type: users
+                      enabled: true
+                      authorization_token: null
+                      created_at: '2019-03-29T06:12:57.686Z'
+                      updated_at: '2019-03-29T06:12:57.686Z'
+                      links:
+                        self: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970
+                        responses: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/responses
+  '/webhooks/{id}/responses':
+    get:
+      tags:
+        - Webhooks
+      summary: List Webhook Responses
+      description: 'Retrieve an ordered and paginated list of the responses garnered from a webhook using a given `:id`.'
+      operationId: listWebhookResponse
+      parameters:
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+        - name: id
+          in: path
+          description: Webhook ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+          example: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/list_webhook_responses'
+              examples:
+                response:
+                  value:
+                    webhook_responses:
+                      - id: f96ca75b-4a37-4e37-a7e9-c121a0fd1142
+                        created_at: '2019-04-01T01:55:30.345Z'
+                        url: 'https://httpbin.org/post'
+                        payload:
+                          disbursements:
+                            id: 42f2ca8f-deca-4d41-9982-26376a2d60ce
+                            amount: 841698
+                            currency: AUD
+                            batch_id: 111
+                            cuscal_payment_transaction_id: null
+                            created_at: '2019-03-29T06:14:43.991Z'
+                            updated_at: '2019-04-01T01:54:58.752Z'
+                            state: batched
+                            to: Bank Account
+                            bank_name: Test Bank Assembly
+                            bank_account_name: Assembly seller36550573
+                            bank_account_number: XXX229
+                            bank_routing_number: XXXXX9
+                            npp_payout_state: trying
+                            links:
+                              transactions: /disbursements/42f2ca8f-deca-4d41-9982-26376a2d60ce/transactions
+                              wallet_accounts: /disbursements/42f2ca8f-deca-4d41-9982-26376a2d60ce/wallet_accounts
+                              bank_accounts: /disbursements/42f2ca8f-deca-4d41-9982-26376a2d60ce/bank_accounts
+                              paypal_accounts: /disbursements/42f2ca8f-deca-4d41-9982-26376a2d60ce/paypal_accounts
+                              items: /disbursements/42f2ca8f-deca-4d41-9982-26376a2d60ce/items
+                              users: /disbursements/42f2ca8f-deca-4d41-9982-26376a2d60ce/users
+                        response:
+                          error: OK
+                        response_code: 200
+                      - id: 0c9cbb28-0b98-4560-9c81-7a4ea6cde95b
+                        created_at: '2019-04-01T01:55:25.276Z'
+                        url: 'https://httpbin.org/post'
+                        payload:
+                          disbursements:
+                            id: d98133ca-9a2e-4322-9610-62b2faf78476
+                            amount: 577954
+                            currency: AUD
+                            batch_id: 111
+                            cuscal_payment_transaction_id: null
+                            created_at: '2019-03-29T06:14:07.045Z'
+                            updated_at: '2019-04-01T01:54:58.448Z'
+                            state: batched
+                            to: Bank Account
+                            bank_name: Test Bank Assembly
+                            bank_account_name: Assembly seller36550536
+                            bank_account_number: XXX229
+                            bank_routing_number: XXXXX3
+                            npp_payout_state: trying
+                            links:
+                              transactions: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/transactions
+                              wallet_accounts: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/wallet_accounts
+                              bank_accounts: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/bank_accounts
+                              paypal_accounts: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/paypal_accounts
+                              items: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/items
+                              users: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/users
+                        response:
+                          error: OK
+                        response_code: 200
+                        meta:
+                          limit: 2
+                          offset: 0
+                          total: 10
+                        links:
+                          self: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/responses?limit=2
+                          webhooks: /webhooks
+  '/webhooks/{webhook_id}/responses/{id}':
+    get:
+      tags:
+        - Webhooks
+      summary: Show Webhook Response
+      description: 'Show details of a specific **Webhook** response using a given `:id`.'
+      operationId: showWebhookResponse
+      parameters:
+        - name: webhook_id
+          in: path
+          description: Webhook ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: '088e4cf1-2508-4bd4-97ab-a78e4e869970'
+          example: '088e4cf1-2508-4bd4-97ab-a78e4e869970'
+        - name: id
+          in: path
+          description: Webhook response ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: '0c9cbb28-0b98-4560-9c81-7a4ea6cde95b'
+          example: '0c9cbb28-0b98-4560-9c81-7a4ea6cde95b'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/single_webhook_response'
+              examples:
+                response:
+                  value:
+                    webhook_responses:
+                      id: 0c9cbb28-0b98-4560-9c81-7a4ea6cde95b
+                      created_at: '2019-04-01T01:55:25.276Z'
+                      url: 'https://httpbin.org/post'
+                      payload:
+                        disbursements:
+                          id: d98133ca-9a2e-4322-9610-62b2faf78476
+                          amount: 577954
+                          currency: AUD
+                          batch_id: 111
+                          cuscal_payment_transaction_id: null
+                          created_at: '2019-03-29T06:14:07.045Z'
+                          updated_at: '2019-04-01T01:54:58.448Z'
+                          state: batched
+                          to: Bank Account
+                          bank_name: Test Bank Assembly
+                          bank_account_name: Assembly seller36550536
+                          bank_account_number: XXX229
+                          bank_routing_number: XXXXX3
+                          npp_payout_state: trying
+                          links:
+                            transactions: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/transactions
+                            wallet_accounts: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/wallet_accounts
+                            bank_accounts: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/bank_accounts
+                            paypal_accounts: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/paypal_accounts
+                            items: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/items
+                            users: /disbursements/d98133ca-9a2e-4322-9610-62b2faf78476/users
+                      response:
+                        error: OK
+                      response_code: 200
+                      links:
+                        self: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/responses/0c9cbb28-0b98-4560-9c81-7a4ea6cde95b
+                        responses: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/responses
+  /webhooks:
+    get:
+      tags:
+        - Webhooks
+      summary: List Webhooks
+      description: Retrieve an ordered and paginated list of all created **Webhooks**.
+      operationId: listWebhooks
+      parameters:
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+        - name: filter
+          in: query
+          description: Narrow down records to relevant character string
+          style: form
+          explode: true
+          schema:
+            type: string
+          example: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/webhooks'
+              examples:
+                response:
+                  value:
+                    callbacks:
+                      - id: a31a9b45-d5b3-401e-b7ce-0c23edd48b06
+                        created_at: '2020-04-16T02:34:45.879Z'
+                        updated_at: '2020-04-16T02:34:45.879Z'
+                        description: Callbacks for items
+                        url: 'https://httpbin.org/post'
+                        object_type: disbursements
+                        enabled: true
+                    meta:
+                      limit: 10
+                      offset: 0
+                      total: 1
+                    links:
+                      self: /webhooks
+    post:
+      tags:
+        - Webhooks
+      summary: Create Webhook
+      description: Create a **Webhook** to notify you at the `URL` when the `object_type` changes
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/webhook_requestBody'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/single_webhook'
+              examples:
+                response:
+                  value:
+                    webhooks:
+                      id: 30403493-7249-433a-83ce-555388f75c01
+                      description: testy
+                      url: 'https://httpbin.org'
+                      object_type: batch_transactions
+                      enabled: true
+                      authorization_token: null
+                      created_at: '2020-04-29T13:02:22.981Z'
+                      updated_at: '2020-04-29T13:02:22.981Z'
+                      links:
+                        self: '/webhooks?description=testy&url=https://httpbin.org&object_type=batch_transactions&enabled=true'
+                        responses: /webhooks/30403493-7249-433a-83ce-555388f75c01/responses
   /card_accounts:
     post:
       tags:
@@ -7500,6 +7858,117 @@ components:
         response_code:
           type: integer
           example: 200
+    single_webhook:
+      properties:
+        webhooks:
+          $ref: '#/components/schemas/webhook'
+    webhook_deletion:
+      properties:
+        webhooks:
+          type: string
+          example: Successfully redacted
+    webhooks:
+      properties:
+        webhooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/webhook'
+    webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          example: f92d4ca1-4ee5-43f3-9e34-ca5f759c5e76
+        description:
+          type: string
+          example: Users Webhook
+        url:
+          type: string
+          example: 'https://httpbin.org/post'
+        object_type:
+          type: string
+          enum:
+            - transactions
+            - items
+            - users
+            - batch_transactions
+            - disbursements
+            - accounts
+          example: users
+        enabled:
+          type: boolean
+          example: true
+        authorization_token:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        marketplace_id:
+          type: string
+          format: uuid
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+            responses:
+              type: string
+    single_webhook_response:
+      properties:
+        call_responses:
+          $ref: '#/components/schemas/webhook_response'
+    list_webhook_responses:
+      properties:
+        webhook_responses:
+          type: array
+          items:
+            $ref: '#/components/schemas/webhook_response'
+        meta:
+          type: object
+          properties:
+            limit:
+              type: integer
+            offset:
+              type: integer
+            total:
+              type: integer
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+            callbacks:
+              type: string
+    webhook_response:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 4476b384-fa48-4473-98ec-8fcdda4a1e84
+        url:
+          type: string
+          example: 'https://httpbin.org/post'
+        created_at:
+          type: string
+          format: date-time
+        payload:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Assembly webhook test
+        response:
+          type: object
+          properties:
+            error:
+              type: string
+              example: OK
+        response_code:
+          type: integer
+          example: 200
     simple_company:
       type: object
       properties:
@@ -8254,6 +8723,34 @@ components:
           example: users
         enabled:
           description: Toggle whether callback is active or inactive.
+          type: string
+          default: 'true'
+          example: 'true'
+    webhook_requestBody:
+      type: object
+      required:
+        - description
+        - url
+        - object_type
+        - enabled
+      properties:
+        description:
+          description: Description to identify the webhook
+          type: string
+          default: 'Users Webhook'
+          example: 'Users Webhook'
+        url:
+          description: URL to which the webhooks will notify
+          type: string
+          default: 'https://httpbin.org'
+          example: 'https://httpbin.org'
+        object_type:
+          description: Object or entity to which the webhooks refer. Please refer to [Webhooks](https://developer.assemblypayments.com/docs/webhooks) for a list of object types.
+          type: string
+          default: users
+          example: users
+        enabled:
+          description: Toggle whether webhook is active or inactive.
           type: string
           default: 'true'
           example: 'true'
