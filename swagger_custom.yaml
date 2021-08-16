@@ -16,6 +16,9 @@ servers:
   description: Pre-Live (Sandbox) Auth issuing server and API
 - url: https://au-0000.auth.assemblypay.com
   description: Production Auth issuing server and API
+# Added by API Auto Mocking Plugin
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/AssemblyPlatforms/assembly-api/2.0
 security:
 - basicAuth: []
 - oAuth2ClientCredentials: []
@@ -1131,6 +1134,7 @@ paths:
                       created_at: 2020-04-29T23:00:01.369Z
                       updated_at: 2020-04-29T23:00:01.369Z
                       id: 14160da0-6c9b-0138-e2ca-0a58a9feac03
+                      cvv_verified: true
                       currency: AUD
                       links:
                         self: /card_accounts/14160da0-6c9b-0138-e2ca-0a58a9feac03
@@ -1199,16 +1203,21 @@ paths:
       description: Where pre-authorization is enabled on a platform, verifies a **Card Account** when a **Card Account** is successfully verified, its verification status is `verified`.
       operationId: verifyCard
       parameters:
-      - name: id
-        in: path
-        description: Card account ID
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          default: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
-        example: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+        - name: id
+          in: path
+          description: Card account ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+          example: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/card_account_verify_requestBody"
       responses:
         "200":
           description: OK
@@ -1224,6 +1233,7 @@ paths:
                       active: true
                       verification_status: verified
                       currency: AUD
+                      cvv_verified: true
                       created_at: 2019-04-08T01:40:15.038Z
                       updated_at: 2019-04-08T01:40:15.038Z
                       card:
@@ -1269,6 +1279,7 @@ paths:
                       active: true
                       verification_status: verified
                       currency: AUD
+                      cvv_verified: true
                       created_at: 2019-04-08T01:40:15.038Z
                       updated_at: 2019-04-08T01:40:15.038Z
                       card:
@@ -2153,7 +2164,8 @@ paths:
       tags:
       - Transactions
       summary: List Transactions
-      description: Retrieve an ordered and paginated list of **Transactions**.
+      description: 'Retrieve an ordered and paginated list of **Transactions**. 
+        Note: `created_before` and `created_after` range can not be greater than 31 days'
       operationId: listTransactions
       parameters:
       - name: limit
@@ -7029,12 +7041,12 @@ components:
           type: string
           example: users
           enum:
-          - transactions
-          - items
-          - users
-          - batch_transactions
-          - disbursements
-          - accounts
+            - transactions
+            - items
+            - users
+            - batch_transactions
+            - disbursements
+            - accounts
         enabled:
           type: boolean
           example: true
