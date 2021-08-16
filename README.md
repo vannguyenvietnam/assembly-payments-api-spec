@@ -13,3 +13,4 @@ npx openapi-generator-cli generate \
 ## Add show batch transaction items
 ## Correct callbacks object_type enum values validation.
 ## Add limit and offset to show batch transaction and disbursement items.
+## Add webhooks spec
