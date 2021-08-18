@@ -1,0 +1,825 @@
+openapi: 3.0.0
+info:
+  description: This is the Swagger definition for the AssemblyPayment's Webhooks API
+  version: 1.0-external
+  title: Webhooks API
+  contact:
+    email: support@assemblypayments.com
+    url: 'http://docs.assemblypayments.com/'
+servers:
+  - url: 'https://sandbox.au-0000.api.assemblypay.com'
+    description: Sandbox (Pre-live) server and API
+  - url : 'https://au-0000.api.assemblypay.com'
+    description: Production server and API
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/AssemblyPlatforms/WAPI/1.0-external
+x-explorer-enabled: false
+x-samples-languages:
+  - curl
+  - ruby
+  - php
+  - javascript
+  - csharp
+  - go
+paths:
+  /status:
+    get:
+      tags:
+        - Status
+      summary: Check health of server
+      description: returns healthy if server is running fine
+      operationId: getStatus
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+              examples:
+                response:
+                  value:
+                    status: healthy
+  /webhooks:
+    post:
+      tags:
+        - Webhooks
+      summary: Create a Webhook
+      description: 'Create a **Webhook** to notify you at the `URL` when the `object_type` changes'
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookParams'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+              examples:
+                response:
+                  value:
+                    uuid: 30403493-7249-433a-83ce-555388f75c01
+                    description: Sample Batch Transaction Webhook
+                    url: 'https://httpbin.org'
+                    http_method: post
+                    object_type: batch_transactions
+                    enabled: true
+                    created_at: '2020-04-29T13:02:22.981Z'
+                    updated_at: '2020-04-29T13:02:22.981Z'
+                    links:
+                      self: /webhooks/30403493-7249-433a-83ce-555388f75c01
+                      jobs: /webhooks/30403493-7249-433a-83ce-555388f75c01/jobs
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Forbidden
+                    message: token expired
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Bad Request
+                    message: 'Required fields missing: object_type'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Already exists
+                    message: webhook already exists with the specified object_type
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Unprocessable entity
+                    message: 'URL is not HTTPS, Object Type transdactions is not a valid value of field'
+        '500':
+          description: Internal Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Internal Server Error
+                    message: cannot create webhook
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+        - Webhooks
+      summary: List Webhooks
+      description: Returns the webhooks associated
+      operationId: getAllWebhooks
+      parameters:
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhooks'
+              examples:
+                response:
+                  value:
+                    webhooks:
+                      - uuid: 6a697a7a-cbaf-4029-98f4-71b4e1ef0b30
+                        object_type: transactions
+                        http_method: post
+                        url: 'https://httpbin.org/post'
+                        description: webhook for transactions
+                        enabled: true
+                        created_at: '2021-05-20T04:31:00.551697677Z'
+                        updated_at: '2021-05-20T04:31:00.551697677Z'
+                    links:
+                      self: /webhooks
+                    meta:
+                      limit: 10
+                      offset: 0
+                      total: 1
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Forbidden
+                    message: token expired
+        '500':
+          description: Internal Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Internal Server Error
+                    message: error fetching webhooks
+      security:
+        - bearerAuth: []
+  '/webhooks/{uuid}':
+    get:
+      tags:
+        - Webhooks
+      summary: Show Webhook
+      description: 'Show details of a specific **Webhook** using a given `:uuid`.'
+      operationId: getWebhookById
+      parameters:
+        - name: uuid
+          in: path
+          description: Webhook UUID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+          example: 088e4cf1-2508-4bd4-97ab-a78e4e869970
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+              examples:
+                response:
+                  value:
+                    uuid: 088e4cf1-2508-4bd4-97ab-a78e4e869970
+                    description: Users Webhook
+                    url: 'https://httpbin.org/post'
+                    object_type: users
+                    http_method: post
+                    enabled: true
+                    created_at: '2019-03-29T06:12:57.686Z'
+                    updated_at: '2019-03-29T06:12:57.686Z'
+                    links:
+                      self: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970
+                      jobs: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/jobs
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Forbidden
+                    message: token expired
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Not Found
+                    message: resource not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Internal Server Error
+                    message: error fetching webhook
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - Webhooks
+      summary: Update an existing Webhook
+      description: |
+        Update an existing **Webhook** using a given `:id`. You can change the `URL`, the `description` and whether the **Webhook** is `enabled` or `disabled`.
+      operationId: updateWebhook
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID of webhook to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookPatchParams'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+              examples:
+                response:
+                  value:
+                    uuid: 088e4cf1-2508-4bd4-97ab-a78e4e869970
+                    description: Users Webhook
+                    url: 'https://httpbin.org/post'
+                    object_type: users
+                    http_method: post
+                    enabled: true
+                    created_at: '2019-03-29T06:12:57.686Z'
+                    updated_at: '2019-03-29T06:12:57.686Z'
+                    links:
+                      self: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970
+                      jobs: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/jobs
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Forbidden
+                    message: token expired
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Bad Request
+                    message: 'field(s) object_type not allowed to update'
+        '404':
+          description: Webhook not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Not Found
+                    message: resource not found
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Unprocessable entity
+                    message: 'URL is not HTTPS'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Internal Server Error
+                    message: cannot update webhook
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Webhooks
+      summary: Delete Webhook by ID
+      description: 'Delete an existing Webhook using a given `:id`.'
+      operationId: deleteWebhookById
+      parameters:
+        - name: uuid
+          in: path
+          description: ID of webhook to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Deleted
+                    message: Successfully redacted
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Forbidden
+                    message: token expired
+        '404':
+          description: Webhook not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Not Found
+                    message: resource not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Internal Server Error
+                    message: cannot disable webhook
+      security:
+        - bearerAuth: []
+  '/webhooks/{uuid}/jobs':
+    get:
+      tags:
+        - Jobs
+      summary: Get jobs associated to Webhook
+      description: 'Retrieve an ordered and paginated list of the jobs garnered from a webhook using a given `:id`.'
+      parameters:
+        - name: uuid
+          in: path
+          description: ID of webhook
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/offsetParam'
+        - name: status
+          in: query
+          description: Narrow down records per status
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+            - success
+            - failed
+            - ''
+            default: ''
+          example: success
+      operationId: getJobs
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jobs'
+              examples:
+                response:
+                  value:
+                    jobs:
+                      - hashed_payload: '32187'
+                        updated_at: '2009-11-11T18:00:00+12:00'
+                        created_at: '2021-03-18T05:31:32.867255Z'
+                        payload:
+                          accounts:
+                            account_type_id: 9100
+                            amount: 0
+                            created_at: '2019-11-27T00:04:41.675Z'
+                            currency_id: 1
+                            id: 20849
+                            legal_entity_id: 5769
+                            links:
+                              self: null
+                            updated_at: '2019-11-27T00:04:41.675Z'
+                            uuid: 6f348690-f2d7-0137-3328-0242ac110003
+                        webhook_uuid: 088e4cf1-2508-4bd4-97ab-a78e4e869970
+                        uuid: d98133ca-9a2e-4322-9610-62b2faf78476
+                        request_responses:
+                          - response_code: 500
+                            message: ''
+                            created_at: '2021-05-24T06:54:32.019211768Z'
+                          - response_code: 500
+                            message: ''
+                            created_at: '2021-05-24T06:54:32.019211768Z'
+                          - response_code: 202
+                            message: ''
+                            created_at: '2021-05-24T07:24:34.156212905Z'
+                    links:
+                      self: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/jobs?limit=2
+                      webhooks: /webhooks
+                    meta:
+                      limit: 2
+                      offset: 0
+                      total: 10
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Forbidden
+                    message: empty token
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Invalid Status
+                    message: valid status are success or failed
+        '404':
+          description: Webhook not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Not Found
+                    message: resource not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Internal Server Error
+                    message: error fetching jobs
+      security:
+        - bearerAuth: []
+  '/webhooks/{uuid}/jobs/{jobUUID}':
+    get:
+      tags:
+        - Jobs
+      summary: Show job associated to Webhook
+      description: 'Show details of a specific **Job** response using a given `:id`.'
+      operationId: getJob
+      parameters:
+        - name: uuid
+          in: path
+          description: ID of webhook
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: jobUUID
+          in: path
+          description: ID of Job
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+              examples:
+                response:
+                  value:
+                    hashed_payload: '32187'
+                    updated_at: '2009-11-11T18:00:00+12:00'
+                    created_at: '2021-03-18T05:31:32.867255Z'
+                    payload:
+                      accounts:
+                        account_type_id: 9100
+                        amount: 0
+                        created_at: '2019-11-27T00:04:41.675Z'
+                        currency_id: 1
+                        id: 20849
+                        legal_entity_id: 5769
+                        links:
+                          self: null
+                        updated_at: '2019-11-27T00:04:41.675Z'
+                        uuid: 6f348690-f2d7-0137-3328-0242ac110003
+                    webhook_uuid: 088e4cf1-2508-4bd4-97ab-a78e4e869970
+                    uuid: d98133ca-9a2e-4322-9610-62b2faf78476
+                    request_responses:
+                      - response_code: 500
+                        message: ''
+                        created_at: '2021-05-24T06:54:32.019211768Z'
+                      - response_code: 500
+                        message: ''
+                        created_at: '2021-05-24T06:54:32.019211768Z'
+                      - response_code: 202
+                        message: ''
+                        created_at: '2021-05-24T07:24:34.156212905Z'
+                    links:
+                      self: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/jobs/d98133ca-9a2e-4322-9610-62b2faf78476
+                      jobs: /webhooks/088e4cf1-2508-4bd4-97ab-a78e4e869970/jobs/
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Forbidden
+                    message: empty token
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Not Found
+                    message: resource not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Internal Server Error
+                    message: error fetching job
+      security:
+        - bearerAuth: []
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Webhooks:
+      type: object
+      properties:
+        webhooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+            limit:
+              type: integer
+            offset:
+              type: integer
+    WebhookParams:
+      type: object
+      required:
+        - url
+        - enabled
+        - object_type
+      properties:
+        url:
+          description: URL to which the webhook will notify
+          type: string
+          default: 'https://httpbin.org'
+          example: 'https://httpbin.org'
+        object_type:
+          description: Object or entity to which the webhook refer. Please refer to [Webhook](https://developer.assemblypayments.com/docs/webhooks) for a list of object types.
+          type: string
+          enum:
+            - batch_transactions
+            - accounts
+            - addresses
+            - companies
+            - items
+            - disbursements
+            - users
+            - transactions
+          example: batch_transactions
+        description:
+          description: Description to identify the webhook
+          type: string
+          default: 'Batch Transactions Webhook'
+          example: 'Sample Batch Transaction Webhook'
+    WebhookPatchParams:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          example: false
+        url:
+          type: string
+          format: url
+          example: 'https://httpbin.org'
+        description:
+          type: string
+          default: 'Users Webhook'
+          example: 'Sample Users Webhook'
+    Webhook:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        object_type:
+          type: string
+        http_method:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        enabled:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        links:
+          $ref: '#/components/schemas/WebhookLinks'
+    Jobs:
+      type: object
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+            limit:
+              type: integer
+            offset:
+              type: integer
+    Job:
+      type: object
+      properties:
+        hashed_payload:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        payload:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Assembly Webhook test
+        webhook_uuid:
+          type: string
+          format: uuid
+        uuid:
+          type: string
+          format: uuid
+        request_responses:
+          $ref: '#/components/schemas/RequestResponses'
+    RequestResponses:
+      type: object
+      properties:
+        response_code:
+          type: string
+        Message:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    APIResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+    WebhookLinks:
+      type: object
+      properties:
+        self:
+          type: string
+        webhooks:
+          type: string
+  parameters:
+    offsetParam:
+      name: offset
+      in: query
+      description: Number of records to offset. Required for pagination.
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    limitParam:
+      name: limit
+      in: query
+      description: Number of records to retrieve. Up to 200.
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 10
