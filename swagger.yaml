@@ -15,9 +15,6 @@ servers:
     description: Pre-Live (Sandbox) Auth issuing server and API
   - url : 'https://au-0000.auth.assemblypay.com'
     description: Production Auth issuing server and API
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/AssemblyPlatforms/assembly-api/2.0
 x-explorer-enabled: false
 x-samples-languages:
   - curl
@@ -1093,82 +1090,6 @@ paths:
                       links:
                         self: '/callbacks?description=testy&url=https://httpbin.org&object_type=batch_transactions&enabled=true'
                         responses: /callbacks/30403493-7249-433a-83ce-555388f75c01/responses
-  
-    get:
-      tags:
-        - Webhooks
-      summary: List Webhooks
-      description: Retrieve an ordered and paginated list of all created **Webhooks**.
-      operationId: listWebhooks
-      parameters:
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/offsetParam'
-        - name: filter
-          in: query
-          description: Narrow down records to relevant character string
-          style: form
-          explode: true
-          schema:
-            type: string
-          example: ''
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/webhooks'
-              examples:
-                response:
-                  value:
-                    callbacks:
-                      - id: a31a9b45-d5b3-401e-b7ce-0c23edd48b06
-                        created_at: '2020-04-16T02:34:45.879Z'
-                        updated_at: '2020-04-16T02:34:45.879Z'
-                        description: Callbacks for items
-                        url: 'https://httpbin.org/post'
-                        object_type: disbursements
-                        enabled: true
-                    meta:
-                      limit: 10
-                      offset: 0
-                      total: 1
-                    links:
-                      self: /webhooks
-    post:
-      tags:
-        - Webhooks
-      summary: Create Webhook
-      description: Create a **Webhook** to notify you at the `URL` when the `object_type` changes
-      operationId: createWebhook
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/webhook_requestBody'
-      responses:
-        '201':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/single_webhook'
-              examples:
-                response:
-                  value:
-                    webhooks:
-                      id: 30403493-7249-433a-83ce-555388f75c01
-                      description: testy
-                      url: 'https://httpbin.org'
-                      object_type: batch_transactions
-                      enabled: true
-                      authorization_token: null
-                      created_at: '2020-04-29T13:02:22.981Z'
-                      updated_at: '2020-04-29T13:02:22.981Z'
-                      links:
-                        self: '/webhooks?description=testy&url=https://httpbin.org&object_type=batch_transactions&enabled=true'
-                        responses: /webhooks/30403493-7249-433a-83ce-555388f75c01/responses
   /card_accounts:
     post:
       tags:
@@ -1198,7 +1119,6 @@ paths:
                       created_at: '2020-04-29T23:00:01.369Z'
                       updated_at: '2020-04-29T23:00:01.369Z'
                       id: 14160da0-6c9b-0138-e2ca-0a58a9feac03
-                      cvv_verified: true
                       currency: AUD
                       links:
                         self: /card_accounts/14160da0-6c9b-0138-e2ca-0a58a9feac03
@@ -1282,11 +1202,6 @@ paths:
             type: string
             default: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
           example: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/card_account_verify_requestBody"        
       responses:
         '200':
           description: OK
@@ -1302,7 +1217,6 @@ paths:
                       active: true
                       verification_status: verified
                       currency: AUD
-                      cvv_verified: true
                       created_at: '2019-04-08T01:40:15.038Z'
                       updated_at: '2019-04-08T01:40:15.038Z'
                       card:
@@ -1348,7 +1262,6 @@ paths:
                       active: true
                       verification_status: verified
                       currency: AUD
-                      cvv_verified: true                    
                       created_at: '2019-04-08T01:40:15.038Z'
                       updated_at: '2019-04-08T01:40:15.038Z'
                       card:
@@ -2214,8 +2127,7 @@ paths:
       tags:
         - Transactions
       summary: List Transactions
-      description: 'Retrieve an ordered and paginated list of **Transactions**. 
-        Note: `created_before` and `created_after` range can not be greater than 31 days'
+      description: Retrieve an ordered and paginated list of **Transactions**.
       operationId: listTransactions
       parameters:
         - $ref: '#/components/parameters/limitParam'
@@ -2258,22 +2170,22 @@ paths:
           schema:
             type: string
           example: ''
-        - name: created_before
-          in: query
-          description: 'Date and time in ISO 8601 format the item(s) were created before (e.g. 2020-02-27T23:54:59Z)'
-          style: form
-          explode: true
-          schema:
-            type: string
-          example: ''
-        - name: created_after
-          in: query
-          description: 'Date and time in ISO 8601 format the item(s) were created after (e.g. 2020-02-27T23:54:59Z)'
-          style: form
-          explode: true
-          schema:
-            type: string
-          example: ''
+#        - name: created_before
+#          in: query
+#          description: 'Date and time in ISO 8601 format the item(s) were created before (e.g. 2020-02-27T23:54:59Z)'
+#          style: form
+#          explode: true
+#          schema:
+#            type: string
+#          example: ''
+#        - name: created_after
+#          in: query
+#          description: 'Date and time in ISO 8601 format the item(s) were created after (e.g. 2020-02-27T23:54:59Z)'
+#          style: form
+#          explode: true
+#          schema:
+#            type: string
+#          example: ''
       responses:
         '200':
           description: OK
@@ -2472,7 +2384,6 @@ paths:
                         items: /transactions/27b91b10-70eb-0138-ec44-0a58a9feac06/items
                         marketplaces: /transactions/27b91b10-70eb-0138-ec44-0a58a9feac06/marketplaces
                         npp_payin_transaction_detail: /transactions/27b91b10-70eb-0138-ec44-0a58a9feac06/npp_payin_transaction_detail
-                        supplementary_data: "/transactions/27b91b10-70eb-0138-ec44-0a58a9feac06/supplementary_data"                      
   '/transactions/{id}/card_accounts':
     get:
       tags:
@@ -2507,7 +2418,6 @@ paths:
                       updated_at: '2020-05-03T12:01:01.378Z'
                       id: 5ef44050-4c56-0137-abdf-0242ac110002
                       verification_status: not_verified
-                      cvv_verified: true
                       currency: AUD
                       card:
                         type: visa
@@ -2601,7 +2511,6 @@ paths:
                         transactions: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/transactions
                         bpay_details: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/bpay_details
                         npp_details: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/npp_details
-                        virtual_accounts: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/virtual_accounts
   '/transactions/{id}/users':
     get:
       tags:
@@ -2753,6 +2662,7 @@ paths:
         - name: created_before
           in: query
           description: 'Date and time in ISO 8601 format the item(s) were created before (e.g. 2020-02-27T23:54:59Z)'
+          required: true
           style: form
           explode: true
           schema:
@@ -2761,6 +2671,7 @@ paths:
         - name: created_after
           in: query
           description: 'Date and time in ISO 8601 format the item(s) were created after (e.g. 2020-02-27T23:54:59Z)'
+          required: true
           style: form
           explode: true
           schema:
@@ -3037,99 +2948,6 @@ paths:
                         bank_accounts: /batch_transactions/90c1418b-f4f4-413e-a4ba-f29c334e7f55/bank_accounts
                         items: /batch_transactions/90c1418b-f4f4-413e-a4ba-f29c334e7f55/items
                         marketplace: /batch_transactions/90c1418b-f4f4-413e-a4ba-f29c334e7f55/marketplaces
-  /batch_transactions/{id}/items:
-    get:
-      tags:
-        - Batch Transactions
-      summary: Show Batch Transactions Items
-      description: Get all the items relating to a batch transactions ID
-      operationId: showBatchTransactionItems
-      parameters:
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/offsetParam'
-        - name: id
-          in: path
-          description: Batch Transactions ID
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            default: 90c1418b-f4f4-413e-a4ba-f29c334e7f55
-          example: 90c1418b-f4f4-413e-a4ba-f29c334e7f55
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/items'
-              examples:
-                response:
-                  value:
-                    items:
-                    - id: 7172300-1-8447
-                      name: Item 7172300-1-8447 Escrow
-                      description: Test Item 7172300-1-8447
-                      created_at: 2020-05-09T07:08:24.727Z
-                      updated_at: 2020-05-09T07:08:49.111Z
-                      state: completed
-                      payment_type_id: 2
-                      status: 22500
-                      amount: 173
-                      deposit_reference: "100014012518964"
-                      buyer_name: Buyer Last Name
-                      buyer_country: AUS
-                      buyer_email: assemblybuyer71718542@assemblypayments.com
-                      seller_name: Assembly seller71718579
-                      seller_country: AUS
-                      seller_email: neol_seller71718579@assemblypayments.com
-                      tds_check_state: NA
-                      currency: AUD
-                      links:
-                        self: /items/7172300-1-8447
-                        buyers: /items/7172300-1-8447/buyers
-                        sellers: /items/7172300-1-8447/sellers
-                        status: /items/7172300-1-8447/status
-                        fees: /items/7172300-1-8447/fees
-                        transactions: /items/7172300-1-8447/transactions
-                        batch_transactions: /items/7172300-1-8447/batch_transactions
-                        wire_details: /items/7172300-1-8447/wire_details
-                        bpay_details: /items/7172300-1-8447/bpay_details
-                    - id: 7172240-1-1578
-                      name: Item 7172240-1-1578 Escrow
-                      description: Test Item 7172240-1-1578
-                      created_at: 2020-05-09T06:58:21.280Z
-                      updated_at: 2020-05-09T06:58:57.855Z
-                      state: completed
-                      payment_type_id: 2
-                      status: 22500
-                      amount: 110
-                      deposit_reference: "100014012518900"
-                      buyer_name: Buyer Last Name
-                      buyer_country: AUS
-                      buyer_email: assemblybuyer71717945@assemblypayments.com
-                      seller_name: Assembly seller71717976
-                      seller_country: AUS
-                      seller_email: neol_seller71717976@assemblypayments.com
-                      tds_check_state: NA
-                      currency: AUD
-                      links:
-                        self: /items/7172240-1-1578
-                        buyers: /items/7172240-1-1578/buyers
-                        sellers: /items/7172240-1-1578/sellers
-                        status: /items/7172240-1-1578/status
-                        fees: /items/7172240-1-1578/fees
-                        transactions: /items/7172240-1-1578/transactions
-                        batch_transactions: /items/7172240-1-1578/batch_transactions
-                        wire_details: /items/7172240-1-1578/wire_details
-                        bpay_details: /items/7172240-1-1578/bpay_details
-                    links:
-                      self: /batch_transactions/90c1418b-f4f4-413e-a4ba-f29c334e7f55/items
-                    meta:
-                      limit: 2
-                      offset: 0
-                      total: 55
   /disbursements:
     get:
       tags:
@@ -3357,7 +3175,6 @@ paths:
                         transactions: /disbursements/90c1418b-f4f4-413e-a4ba-f29c334e7f55/transactions
                         bpay_details: /disbursements/90c1418b-f4f4-413e-a4ba-f29c334e7f55/bpay_details
                         npp_details: /disbursements/90c1418b-f4f4-413e-a4ba-f29c334e7f55/npp_details
-                        virtual_accounts: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/virtual_accounts                    
 #  '/disbursements/{id}/paypal_accounts':
 #    get:
 #      tags:
@@ -3513,8 +3330,6 @@ paths:
       description: 'Get all the items relating to a disbursement ID'
       operationId: showDisbursementItems
       parameters:
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/offsetParam'
         - name: id
           in: path
           description: Disbursement ID
@@ -3632,7 +3447,6 @@ paths:
                       updated_at: '2020-05-06T01:38:29.022Z'
                       id: 35977230-7168-0138-0a1d-0a58a9feac07
                       verification_status: not_verified
-                      cvv_verified: true
                       currency: AUD
                       card:
                         type: visa
@@ -4177,7 +3991,6 @@ paths:
                         transactions: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/transactions
                         bpay_details: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/bpay_details
                         npp_details: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/npp_details
-                        virtual_accounts: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/virtual_accounts
   '/wallet_accounts/{id}/users':
     get:
       tags:
@@ -4293,56 +4106,56 @@ paths:
                         paypal_accounts: /disbursements/8a31ebfa-421b-4cbb-9241-632f71b3778a/paypal_accounts
                         items: /disbursements/8a31ebfa-421b-4cbb-9241-632f71b3778a/items
                         users: /disbursements/8a31ebfa-421b-4cbb-9241-632f71b3778a/users
-#  '/wallet_accounts/{id}/deposit':
-#    post:
-#      tags:
-#        - Wallet Accounts
-#      summary: Deposit Funds
-#      description: Deposit funds to a **Wallet Account** from a specified payment account.
-#      operationId: depositFunds
-#      parameters:
-#        - name: id
-#          in: path
-#          description: Wallent account ID
-#          required: true
-#          style: simple
-#          explode: false
-#          schema:
-#            type: string
-#            default: 'bd6e9c20-73f1-0138-fb91-0a58a9feac09'
-#          example: 'bd6e9c20-73f1-0138-fb91-0a58a9feac09'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/deposit_requestBody'
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/single_disbursement'
-#              examples:
-#                response:
-#                  value:
-#                    disbursements:
-#                      id: d3186002-b3f8-42a7-a609-583aa36ec58c
-#                      amount: 100
-#                      currency: AUD
-#                      batch_id: null
-#                      cuscal_payment_transaction_id: null
-#                      created_at: '2020-05-11T10:05:58.386Z'
-#                      updated_at: '2020-05-11T10:05:58.386Z'
-#                      state: pending
-#                      links:
-#                        transactions: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/transactions
-#                        wallet_accounts: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/wallet_accounts
-#                        bank_accounts: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/bank_accounts
-#                        paypal_accounts: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/paypal_accounts
-#                        items: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/items
-#                        users: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/users
+  '/wallet_accounts/{id}/deposit':
+    post:
+      tags:
+        - Wallet Accounts
+      summary: Deposit Funds
+      description: Deposit funds to a **Wallet Account** from a specified payment account.
+      operationId: depositFunds
+      parameters:
+        - name: id
+          in: path
+          description: Wallent account ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            default: 'bd6e9c20-73f1-0138-fb91-0a58a9feac09'
+          example: 'bd6e9c20-73f1-0138-fb91-0a58a9feac09'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deposit_requestBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/single_disbursement'
+              examples:
+                response:
+                  value:
+                    disbursements:
+                      id: d3186002-b3f8-42a7-a609-583aa36ec58c
+                      amount: 100
+                      currency: AUD
+                      batch_id: null
+                      cuscal_payment_transaction_id: null
+                      created_at: '2020-05-11T10:05:58.386Z'
+                      updated_at: '2020-05-11T10:05:58.386Z'
+                      state: pending
+                      links:
+                        transactions: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/transactions
+                        wallet_accounts: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/wallet_accounts
+                        bank_accounts: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/bank_accounts
+                        paypal_accounts: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/paypal_accounts
+                        items: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/items
+                        users: /disbursements/d3186002-b3f8-42a7-a609-583aa36ec58c/users
   '/wallet_accounts/{id}':
     get:
       tags:
@@ -4385,7 +4198,6 @@ paths:
                         transactions: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/transactions
                         bpay_details: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/bpay_details
                         npp_details: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/npp_details
-                        virtual_accounts: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/virtual_accounts                    
   '/wallet_accounts/{id}/npp_details':
     get:
       tags:
@@ -5867,99 +5679,6 @@ paths:
                         wire_details: /items/7190770-1-2908/wire_details
                         bpay_details: /items/7190770-1-2908/bpay_details
                         tds_checks: /items/7190770-1-2908/tds_checks
-  '/items/{id}/release_payment':
-    patch:
-      tags:
-        - Item Actions
-      summary: Release Payment (Deprecated - Do Not Use)
-      description: Included for legacy purposes for existing customers that use Escrow payments which are no longer supported for new flows/customers. Release funds held in escrow from an **Item** with an **Escrow** or **Escrow Partial Release** payment type.  This will transition the **Item** state to `completed`.
-      operationId: releasePayment
-      parameters:
-        - name: id
-          in: path
-          description: Marketplace / Platform item ID
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            default: '7190770-1-2908'
-          example: '7190770-1-2908'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/release_payment_requestBody'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/single_item'
-              examples:
-                response:
-                  value:
-                    items:
-                      id: 7190770-1-2908
-                      name: Item 7190770-1-2908
-                      description: Test Item 7190770-1-2908
-                      custom_descriptor: null
-                      payout_descriptor: null
-                      created_at: '2020-05-11T10:26:49.660Z'
-                      updated_at: '2020-05-11T10:26:49.660Z'
-                      state: completed
-                      net_amount: 102
-                      chargedback_amount: 0
-                      refunded_amount: 0
-                      released_amount: 102
-                      seller_url: ''
-                      buyer_url: ''
-                      remaining_amount: 102
-                      status: 22500
-                      amount: 102
-                      payment_type_id: 1
-                      due_date: null
-                      requested_release_amount: 0
-                      pending_release_amount: 0
-                      dynamic_descriptor: null
-                      invoice_url: null
-                      deposit_reference: '100014012533386'
-                      buyer_fees: 0
-                      seller_fees: 0
-                      credit_card_fee: 0
-                      direct_debit_fee: 0
-                      paypal_fee: 0
-                      promisepay_fee: 1
-                      batch_state: null
-                      total_outstanding: 0
-                      total_amount: 102
-                      currency: AUD
-                      payment_method: pending
-                      buyer_name: Neol Buyer
-                      buyer_email: neol_buyer719013950014@assemblypayments.com
-                      buyer_country: AUS
-                      seller_name: Assembly seller71718579
-                      seller_email: neol_seller71718579@assemblypayments.com
-                      seller_country: AUS
-                      payment_credit_card_enabled: true
-                      payment_direct_debit_enabled: true
-                      tds_check_state: null
-                      related:
-                        buyers: buyer-719013950014
-                        sellers: seller-71718579
-                      links:
-                        self: /items/7190770-1-2908/cancel
-                        buyers: /items/7190770-1-2908/buyers
-                        sellers: /items/7190770-1-2908/sellers
-                        status: /items/7190770-1-2908/status
-                        fees: /items/7190770-1-2908/fees
-                        transactions: /items/7190770-1-2908/transactions
-                        batch_transactions: /items/7190770-1-2908/batch_transactions
-                        wire_details: /items/7190770-1-2908/wire_details
-                        bpay_details: /items/7190770-1-2908/bpay_details
-                        tds_checks: /items/7190770-1-2908/tds_checks
 components:
   parameters:
     offsetParam:
@@ -6294,9 +6013,6 @@ components:
             currency:
               type: string
               example: AUD
-            cvv_verified:
-              type: boolean
-              example: true
             verification_status:
               type: string
               enum:
@@ -6415,9 +6131,6 @@ components:
                 npp_details:
                   type: object
                   example: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/npp_details
-                virtual_accounts:
-                  type: object
-                  example: /wallet_accounts/5c1c6b10-4c56-0137-8cd7-0242ac110002/virtual_accounts
     wallet_account_npp_details:
       type: object
       properties:
@@ -6760,13 +6473,6 @@ components:
               type: integer
     item:
       type: object
-      required:
-        - id
-        - name
-        - amount
-        - payment_type
-        - buyer_id
-        - seller_id
       properties:
         id:
           type: string
@@ -6924,7 +6630,6 @@ components:
         due_date:
           type: string
           format: date
-          nullable: true
         pending_release_amount:
           type: integer
           example: 0
@@ -7249,11 +6954,6 @@ components:
               type: string
     batch_transaction:
       type: object
-      required:
-        - id
-        - amount
-        - created_at
-        - updated_at
       properties:
         id:
           type: string
@@ -7495,12 +7195,12 @@ components:
         object_type:
           type: string
           enum:
-            - transactions
-            - items
-            - users
-            - batch_transactions
-            - disbursements
-            - accounts
+            - Transactions
+            - Items
+            - Users
+            - Batch Transactions
+            - Disbursements
+            - Accounts
           example: users
         enabled:
           type: boolean
@@ -7576,117 +7276,6 @@ components:
         response_code:
           type: integer
           example: 200
-    single_webhook:
-      properties:
-        webhooks:
-          $ref: '#/components/schemas/webhook'
-    webhook_deletion:
-      properties:
-        webhooks:
-          type: string
-          example: Successfully redacted
-    webhooks:
-      properties:
-        webhooks:
-          type: array
-          items:
-            $ref: '#/components/schemas/webhook'
-    webhook:
-      type: object
-      properties:
-        id:
-          type: string
-          example: f92d4ca1-4ee5-43f3-9e34-ca5f759c5e76
-        description:
-          type: string
-          example: Users Webhook
-        url:
-          type: string
-          example: 'https://httpbin.org/post'
-        object_type:
-          type: string
-          enum:
-            - transactions
-            - items
-            - users
-            - batch_transactions
-            - disbursements
-            - accounts
-          example: users
-        enabled:
-          type: boolean
-          example: true
-        authorization_token:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        marketplace_id:
-          type: string
-          format: uuid
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-            responses:
-              type: string
-    single_webhook_response:
-      properties:
-        call_responses:
-          $ref: '#/components/schemas/webhook_response'
-    list_webhook_responses:
-      properties:
-        webhook_responses:
-          type: array
-          items:
-            $ref: '#/components/schemas/webhook_response'
-        meta:
-          type: object
-          properties:
-            limit:
-              type: integer
-            offset:
-              type: integer
-            total:
-              type: integer
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-            callbacks:
-              type: string
-    webhook_response:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 4476b384-fa48-4473-98ec-8fcdda4a1e84
-        url:
-          type: string
-          example: 'https://httpbin.org/post'
-        created_at:
-          type: string
-          format: date-time
-        payload:
-          type: object
-          properties:
-            message:
-              type: string
-              example: Assembly webhook test
-        response:
-          type: object
-          properties:
-            error:
-              type: string
-              example: OK
-        response_code:
-          type: integer
-          example: 200
     simple_company:
       type: object
       properties:
@@ -7724,7 +7313,6 @@ components:
           example: 100200300
         charge_tax:
           type: boolean
-          nullable: true
           example: false
         phone:
           type: string
@@ -8042,10 +7630,6 @@ components:
             npp_payin_transaction_detail:
               type: string
               example: null
-            supplementary_data: 
-              type: string
-              example: "/transactions/ea36e48a-4638-4d1a-a345-e1a0a584df8b/supplementary_data"                      
-
     disbursements:
       type: object
       properties:
@@ -8444,34 +8028,6 @@ components:
           type: string
           default: 'true'
           example: 'true'
-    webhook_requestBody:
-      type: object
-      required:
-        - description
-        - url
-        - object_type
-        - enabled
-      properties:
-        description:
-          description: Description to identify the webhook
-          type: string
-          default: 'Users Webhook'
-          example: 'Users Webhook'
-        url:
-          description: URL to which the webhooks will notify
-          type: string
-          default: 'https://httpbin.org'
-          example: 'https://httpbin.org'
-        object_type:
-          description: Object or entity to which the webhooks refer. Please refer to [Webhooks](https://developer.assemblypayments.com/docs/webhooks) for a list of object types.
-          type: string
-          default: users
-          example: users
-        enabled:
-          description: Toggle whether webhook is active or inactive.
-          type: string
-          default: 'true'
-          example: 'true'
     card_account_requestBody:
       type: object
       required:
@@ -8514,13 +8070,6 @@ components:
           type: string
           example: 83f54680-9600-4bee-a6d1-84a5d0e10059
           default: 83f54680-9600-4bee-a6d1-84a5d0e10059
-    card_account_verify_requestBody:
-      type: object
-      properties:
-        cvv:
-          description: CVV / CVC
-          type: string
-          example: '123'
     company_requestBody:
       type: object
       required:
@@ -8546,30 +8095,35 @@ components:
           example: '123456789'
           default: '123456789'
         charge_tax:
-          description: Charge GST or not? allowed values are true or false
-          type: boolean
+          description: Charge GST or not?
+          type: string
           example: ''
-          nullable: true
+          default: ''
         address_line1:
           description: Address line 1
           type: string
           example: 'Collins'
+          default: 'Collins'
         address_line2:
           description: Address line 2
           type: string
           example: ''
+          default: ''
         city:
           description: City
           type: string
           example: 'Melbourne'
+          default: 'Melbourne'
         state:
           description: State
           type: string
           example: 'VIC'
+          default: 'VIC'
         zip:
           description: Zip
           type: string
           example: '3000'
+          default: '3000'
         country:
           description: 3 digit country code (eg. AUS)
           type: string
@@ -8598,7 +8152,7 @@ components:
           default: 7fac6c60-6f5b-0138-eb9a-0a58a9feac03
         amount:
           description: Amount for direct debit in cents
-          type: integer
+          type: string
           example: 100
           default: 100
     fee_requestBody:
@@ -8630,21 +8184,24 @@ components:
           default: '2'
         amount:
           description: 'Amount in cents; if the fee type is percentage, then this shows the percentage in hundredths (For example, an amount of 5 refers to 0.05% in fees.)'
-          type: integer
+          type: string
           example: 200
           default: 200
         cap:
           description: 'Cap the Fee'
           type: string
           example: ''
+          default: ''
         min:
           description: Minimum Fee
-          type: integer
+          type: string
           example: ''
+          default: ''
         max:
           description: Maximum Fee
-          type: integer
+          type: string
           example: ''
+          default: ''
         to:
           description: 'Who pays the Fee. Allowed values are (buyer or seller). If this field has a value of buyer, then the buyer will have to pay the fee on top of the actual payment (example for an item of 100 and a fee of 2, then the buyer would have to pay 102) If this field has a value of seller, then the seller will end up receiving the amount - the fee (example for an item of 100 and a fee of 2, then the seller would end up receiving 98)'
           type: string
@@ -8654,6 +8211,7 @@ components:
             - cc
             - int_wire
           example: 'seller'
+          default: 'seller'
     charge_requestBody:
       type: object
       required:
@@ -8672,9 +8230,10 @@ components:
           description: Description of the Charge being created.
           type: string
           example: 'Test Charge 001'
+          default: 'Test Charge 001'
         amount:
           description: The cost being charged in cents.
-          type: integer
+          type: string
           example: '1000'
           default: '1000'
         email:
@@ -8696,35 +8255,38 @@ components:
           description: The ID of the User
           type: string
           example: 'buyer-1556505753'
+          default: 'buyer-1556505753'
         fee_ids:
           description: A comma separated list of fee IDs to apply
           type: string
           example: ''
+          default: ''
         currency:
           description: '[ISO 4217 alpha-3](https://en.wikipedia.org/wiki/ISO_4217#Active_codes) currency code. This is an optional field and if not provided, the item will be created with the default currency of the marketplace.'
           type: string
           example: 'AUD'
+          default: 'AUD'
         retain_account:
           description: |
             True - Enables the account to be charged in the future. False - Redacts the account after this charge.
           type: boolean
           example: ''
+          default: ''
         device_id:
           description: Device Information for the device initiating the payment
           type: string
           example: ''
+          default: ''
         ip_address:
           description: IP Information for the device initiating the payment
           type: string
           example: ''
+          default: ''
         custom_descriptor:
           description: 'When `custom_descriptors` are enabled, this is the information to appear on credit card and direct debit statements.'
           type: string
           example: ''
-        cvv:
-          description: CVV / CVC
-          type: string
-          example: ''
+          default: ''
     token_auth_requestBody:
       type: object
       required:
@@ -8758,14 +8320,17 @@ components:
           description: 'Last name of the user'
           type: string
           example: 'Calangi'
+          default: 'Calangi'
         email:
           description: Email of the user. Unique to platform.
           type: string
           example: 'neol.calangi+buyer1556506027@promisepay.com'
+          default: 'neol.calangi+buyer1556506027@promisepay.com'
         mobile:
           description: International number format. Include ’+’ and no spaces.
           type: string
           example: '+21556506027'
+          default: '+21556506027'
         address_line1:
           description: 'First line of the user address'
           type: string
@@ -8790,42 +8355,52 @@ components:
           description: "[ISO 3166-1 alpha-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3#Officially_assigned_code_elements) country code (3 char)"
           type: string
           example: 'AUS'
+          default: 'AUS'
         dob:
           description: Date of Birth (DD/MM/YYYY).
           type: string
           example: null
+          default: ''
         government_number:
           description: 'Generic parameter to capture important user verification data. eg. SSN for US users, TFN for AU users.'
           type: string
           example: ''
+          default: ''
         drivers_license_number:
           description: 'Driving license number of the user'
           type: string
           example: ''
+          default: ''
         drivers_license_state:
           description: "State section of the user's driving license"
           type: string
           example: ''
+          default: ''
         ip_address:
           description: 'IP address'
           type: string
           example: ''
+          default: ''
         logo_url:
           description: 'URL link to the logo'
           type: string
           example: ''
+          default: ''
         color_1:
           description: 'Color code number 1'
           type: string
           example: ''
+          default: ''
         color_2:
           description: 'Color code number 2'
           type: string
           example: ''
+          default: ''
         custom_descriptor:
           description: 'When custom_descriptors are enabled, this is the information to appear on bundle direct debit statements (which show the buyer''s custom_descriptor) as well as international wire payout, direct credit and PayPal payout statements (which show the seller''s custom_descriptor)'
           type: string
           example: ''
+          default: ''
     bank_account_id_requestBody:
       type: object
       required:
@@ -8870,6 +8445,7 @@ components:
           description: International number format. Include ’+’ and no spaces.
           type: string
           example: '+21556506027'
+          default: '+21556506027'
         address_line1:
           description: 'First line of the user address'
           type: string
@@ -8899,38 +8475,47 @@ components:
           description: Date of Birth (DD/MM/YYYY).
           type: string
           example: null
+          default: ''
         government_number:
           description: 'Generic parameter to capture important user verification data. eg. SSN for US users, TFN for AU users.'
           type: string
           example: ''
+          default: ''
         drivers_license_number:
           description: 'Driving license number of the user'
           type: string
           example: ''
+          default: ''
         drivers_license_state:
           description: "State section of the user's driving license"
           type: string
           example: ''
+          default: ''
         ip_address:
           description: 'IP address'
           type: string
           example: ''
+          default: ''
         logo_url:
           description: 'URL link to the logo'
           type: string
           example: ''
+          default: ''
         color_1:
           description: 'Color code number 1'
           type: string
           example: ''
+          default: ''
         color_2:
           description: 'Color code number 2'
           type: string
           example: ''
+          default: ''
         custom_descriptor:
           description: 'When custom_descriptors are enabled, this is the information to appear on bundle direct debit statements (which show the buyer''s custom_descriptor) as well as international wire payout, direct credit and PayPal payout statements (which show the seller''s custom_descriptor)'
           type: string
           example: ''
+          default: ''
     withdraw_requestBody:
       type: object
       required:
@@ -8951,6 +8536,7 @@ components:
           description: 'A descriptor specified by the customer to be passed on the withdraw call. This requires that custom_descriptors are enabled. In the case of fast payments (AU / NPP) Assembly will append a value in the beginning of descriptor, the customer can use 200 characters (excluding URL, javascript/code, emojis). In the case of DE batch payments will allow 18 characters'
           type: string
           example: ''
+          default: ''
     deposit_requestBody:
       type: object
       required:
@@ -8989,16 +8575,19 @@ components:
           default: 'Item 7190770-1-2908'
         amount:
           description: The cost in cents
-          type: integer
+          type: string
           example: '102'
           default: '102'
         currency:
           description: '[ISO 4217 alpha-3](https://en.wikipedia.org/wiki/ISO_4217#Active_codes) currency code. This is an optional field and if not provided, the item will be created with the default currency of the marketplace.'
           type: string
           example: 'AUD'
+          default: 'AUD'
         payment_type:
           description: 'Payment type: 2. Express'
           type: integer
+          enum:
+            - 2
           example: '2'
           default: '2'
         buyer_id:
@@ -9015,22 +8604,27 @@ components:
           description: A comma separated list of fee IDs to apply
           type: string
           example: ''
+          default: ''
         description:
           description: A description of the item
           type: string
           example: 'Test Item 7190770-1-2908'
+          default: 'Test Item 7190770-1-2908'
         buyer_url:
           description: Link for the buyer CTA (Call To Action)
           type: string
           example: ''
+          default: ''
         seller_url:
           description: Link for the seller CTA (Call To Action)
           type: string
           example: ''
+          default: ''
         tax_invoice:
           description: Toggle to generate tax invoice once Item is complete
           type: boolean
           example: ''
+          default: ''
 #        due_date:
 #          description: When the Item payment is due (DD/MM/YYYY)
 #         type: string
@@ -9040,33 +8634,40 @@ components:
           description: 'When `custom_descriptors` are enabled, this is the information to appear on credit card and direct debit statements.'
           type: string
           example: ''
+          default: ''
     update_item_requestBody:
       type: object
       properties:
         amount:
           description: The cost in cents
-          type: integer
+          type: string
           example: '102'
+          default: '102'
         name:
           description: A name for the item
           type: string
           example: 'Item 7190770-1-2908'
+          default: 'Item 7190770-1-2908'
         buyer_id:
           description: Marketplace / Pltform buyer ID
           type: string
           example: 'buyer-719013950014'
+          default: 'buyer-719013950014'
         seller_id:
           description: Marketplace / Platform Seller ID
           type: string
           example: 'seller-71718579'
+          default: 'seller-71718579'
         description:
           description: A description of the item
           type: string
           example: 'Test Item 7190770-1-2908'
+          default: 'Test Item 7190770-1-2908'
         custom_descriptor:
           description: 'When `custom_descriptors` are enabled, this is the information to appear on credit card and direct debit statements.'
           type: string
           example: ''
+          default: ''
     account_id_requestBody:
       type: object
       required:
@@ -9081,29 +8682,30 @@ components:
           description: Device Information for the device initiating the payment. This will need to be provided for card payments.
           type: string
           example: ''
+          default: ''
         ip_address:
           description: IP Information for the device initiating the payment. This will need to be provided for card payments.
           type: string
           example: ''
-        cvv:
-          description: CVV / CVC
-          type: string
-          example: ''
+          default: ''
     refund_requestBody:
       type: object
       properties:
         refund_amount:
           description: 'For partial refunds, if they are enabled for marketplace.'
-          type: integer
+          type: string
           example: ''
+          default: ''
         refund_message:
           description: Reason for the request.
           type: string
           example: ''
+          default: ''
         account_id:
           description: 'The account id to be used to get the refunds from. This will need to be an account that has already been set up within Assembly'
           type: string
           example: ''
+          default: ''
     card_account_id_requestBody:
       type: object
       required:
@@ -9114,21 +8716,6 @@ components:
           type: string
           example: '725cc8c0-759b-0138-5d6d-0a58a9feac05'
           default: '725cc8c0-759b-0138-5d6d-0a58a9feac05'
-        cvv:
-          description: CVV / CVC
-          type: string
-          example: ''
-    release_payment_requestBody:
-      type: object
-      properties:
-        release_amount:
-          description: Partial amount to be released in cents
-          type: integer
-          example: ''
-        flag_release:
-          description: to be used if release flagging enabled for your marketplace
-          type: boolean
-          example: ''
   securitySchemes:
     basicAuth:
       type: http

@@ -1,4 +1,7 @@
 # Generate Ruby SDK
+## Assembly Payments API Spec
+https://api.swaggerhub.com/apis/AssemblyPlatforms/assembly-api/2.0/swagger.yaml?resolved=true
+
 ## Install openapi-generator-cli
 npm install @openapitools/openapi-generator-cli
 
