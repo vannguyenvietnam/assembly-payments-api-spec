@@ -14,6 +14,12 @@ Eg:
     -o ~/workspace/libs/assembly-ruby/ \
     --additional-properties=gemName=assembly_ruby
 `
+`npx openapi-generator-cli generate \
+    -i ./swagger_webhooks.yaml \
+    -g ruby \
+    -o ~/workspace/libs/assembly-ruby-webhooks/ \
+    --additional-properties=gemName=assembly_ruby_webhooks
+`
 
 ## Notes for custom endpoints:
 - Add show batch transaction items
