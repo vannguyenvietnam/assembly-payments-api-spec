@@ -15,7 +15,6 @@ Eg:
     --additional-properties=gemName=assembly_ruby
 `
 
-
 ## Notes for custom endpoints:
 - Add show batch transaction items
 - Correct callbacks object_type enum values validation.
