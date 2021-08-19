@@ -11,7 +11,7 @@ Eg:
 `npx openapi-generator-cli generate \
     -i ./swagger.yaml \
     -g ruby \
-    -o ~/workspace/libs/assembly_payments_ruby/ \
+    -o ~/workspace/libs/assembly-ruby/ \
     --additional-properties=gemName=assembly_ruby
 `
 
