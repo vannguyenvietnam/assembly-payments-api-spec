@@ -7,7 +7,7 @@
 `npm install @openapitools/openapi-generator-cli`
 
 ## Generate SDK
->npx openapi-generator-cli generate \
+Eg: npx openapi-generator-cli generate \
     -i ./swagger.yaml \
     -g ruby \
     -o ~/workspace/libs/assembly_payments_ruby/ \
