@@ -206,6 +206,88 @@ paths:
                     message: cannot create webhook
       security:
       - bearerAuth: []
+  /webhooks/secret_key:
+    post:
+      tags:
+      - Webhooks secret_key
+      summary: Create a Webhooks secret_key
+      description: Create a **Webhooks secret_key**
+      operationId: createWebhookSecretKey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSecretKeyParams'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Created
+                    message: secret key created successfully
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Forbidden
+                    message: token expired
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Bad Request
+                    message: 'Required fields missing: secret_key'
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Already exists
+                    message: webhooks secret key already exists with the specified secret_key
+        "422":
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Unprocessable entity
+                    message: Secret key is not a valid
+        "500":
+          description: Internal Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+              examples:
+                response:
+                  value:
+                    status: Internal Server Error
+                    message: cannot create webhooks secret key
+      security:
+      - bearerAuth: []
   /webhooks/{uuid}:
     get:
       tags:
@@ -836,6 +918,11 @@ components:
         self:
           type: string
         webhooks:
+          type: string
+    WebhookSecretKeyParams: 
+      type: object
+      properties:
+        secret_key:
           type: string
   parameters:
     offsetParam:
