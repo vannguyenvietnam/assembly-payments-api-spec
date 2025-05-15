@@ -6450,6 +6450,7 @@ components:
           - payment_pending
           - payment_held
           - payment_authorized
+          - void_pending
           - voided
           - fraud_hold
           - payment_deposited
@@ -6476,6 +6477,7 @@ components:
           - 22150
           - 22175
           - 22180
+          - 22185
           - 22195
           - 22190
           - 22200

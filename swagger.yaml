@@ -6524,6 +6524,7 @@ components:
           - payment_pending
           - payment_held
           - payment_authorized
+          - void_pending
           - voided
           - fraud_hold
           - payment_deposited
@@ -6550,6 +6551,7 @@ components:
           - 22150
           - 22175
           - 22180
+          - 22185
           - 22195
           - 22190
           - 22200
@@ -8524,6 +8526,10 @@ components:
           type: string
           description: When `custom_descriptors` are enabled, this is the information to appear on credit card and direct debit statements.
           example: ""
+        fee_ids:
+          description: A comma separated list of fee IDs to apply
+          type: string
+          example: ''
     account_id_requestBody:
       required:
       - account_id
