@@ -5567,6 +5567,12 @@ paths:
           type: string
           default: 7190770-1-2908
         example: 7190770-1-2908
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/capture_payment_requestBody'
+        required: true
       responses:
         "200":
           description: OK
@@ -8566,6 +8572,12 @@ components:
           type: string
           description: The account id to be used to get the refunds from. This will need to be an account that has already been set up within Assembly
           example: ""
+    capture_payment_requestBody:
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: For partial payment, if they are enabled for marketplace.
     card_account_id_requestBody:
       required:
       - account_id
