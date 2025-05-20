@@ -6544,6 +6544,7 @@ components:
           - refund_pending
           - refund_flagged
           - off_platform_refunded
+          - partial_settled
           - partial_completed
           - partial_paid
           - off_platform_chargedback
@@ -6571,6 +6572,7 @@ components:
           - 22610
           - 22650
           - 22670
+          - 22720
           - 22700
           - 22800
           - 22680
